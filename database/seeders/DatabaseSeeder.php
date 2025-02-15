@@ -22,5 +22,6 @@ class DatabaseSeeder extends Seeder
             'image' => '',
             'bio' => 'This is a test user bio.',
         ]);
+        $this->call(ArticleRevisionSeeder::class);
     }
 }

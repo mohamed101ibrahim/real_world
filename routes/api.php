@@ -6,6 +6,8 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\TagController;
+use App\Http\Controllers\ArticleRevisionController;
+
 
 Route::get('profiles/{user}', [ProfileController::class, 'show']);
 Route::get('tags', [TagController::class, 'index']);
@@ -39,6 +41,12 @@ Route::middleware('auth')->group(function () {
         Route::delete('{article}', [ArticleController::class, 'destroy']);
         Route::post('{article}/favorite', [ArticleController::class, 'favorite']);
         Route::delete('{article}/favorite', [ArticleController::class, 'unfavorite']);
+    });
+
+    Route::prefix('article')->group(function () {
+        Route::get('{article}/revisions', [ArticleRevisionController::class, 'index']);
+        Route::get('{article}/revisions/{revision}', [ArticleRevisionController::class, 'show']);
+        Route::post('{article}/revisions/{revision}/revert', [ArticleRevisionController::class, 'update']);
     });
 
     Route::prefix('articles')->group(function () {
