@@ -14,12 +14,13 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'article.title' => 'sometimes|string|max:255',
-            'article.description' => 'sometimes|string|max:255',
-            'article.body' => 'sometimes|string|max:2048',
-            'article.tagList' => 'sometimes|array',
-            'article.tagList.*' => 'sometimes|string|max:255'
+            'title' => 'sometimes|string|max:255',
+            'description' => 'sometimes|string|max:255',
+            'body' => 'sometimes|string|max:2048',
+            'tagList' => 'sometimes|array',
+            'tagList.*' => 'sometimes|string|max:255'
         ];
     }
-    
+
+
 }

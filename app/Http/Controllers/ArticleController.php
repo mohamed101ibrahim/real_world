@@ -26,42 +26,48 @@ class ArticleController extends Controller
         $this->user = $user;
     }
 
-    public function index(IndexRequest $request): ArticleCollection
+    public function index(IndexRequest $request)/*: ArticleCollection*/
+    {
+        // return new ArticleCollection($this->article->getFiltered($request->validated()));
+        $articles = Article::all();
+        return view('articles.index', compact('articles'));
+    }
+
+    public function feed(FeedRequest $request)/*: ArticleCollection*/
     {
         return new ArticleCollection($this->article->getFiltered($request->validated()));
     }
 
-    public function feed(FeedRequest $request): ArticleCollection
+    public function show(Article $article)/*: ArticleCollection*/
     {
-        return new ArticleCollection($this->article->getFiltered($request->validated()));
+        // return $this->articleResponse($article);
+        $article->load('revisions', 'user');
+        return view('articles.show', compact('article'));
     }
 
-    public function show(Article $article): ArticleResource
+    public function store(StoreRequest $request)/*: ArticleCollection*/
     {
-        return $this->articleResponse($article);
-    }
-
-    public function store(StoreRequest $request): ArticleResource
-    {
-        $data = $request->validated(); // ✅ Get validated request data
+        $data = $request->validated();
 
         $article = auth()->user()->articles()->create($data['article']);
 
-        $this->syncTags($article, $data['article']['tagList'] ?? []); // ✅ Pass tags explicitly
+        $this->syncTags($article, $data['article']['tagList'] ?? []);
 
         return $this->articleResponse($article);
     }
 
-    public function update(Article $article, UpdateRequest $request): ArticleResource
+    public function edit(Article $article)
     {
-        $data = $request->validated(); // ✅ Get validated request data
-
-        $article->update($data['article']);
-
-        $this->syncTags($article, $data['article']['tagList'] ?? []); // ✅ Pass tags explicitly
-
-        return $this->articleResponse($article);
+        return view('articles.edit', compact('article'));
     }
+    public function update(Article $article, UpdateRequest $request)
+    {
+        $data = $request->validated();
+        $article->update($data);
+        return redirect()->route('articles.index')
+            ->with('success', 'Article updated successfully.');
+    }
+
 
     public function destroy(Article $article, DestroyRequest $request): void
     {
