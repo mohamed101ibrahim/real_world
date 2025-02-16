@@ -43,18 +43,22 @@ class ArticleController extends Controller
 
     public function store(StoreRequest $request): ArticleResource
     {
-        $article = auth()->user()->articles()->create($request->validated()['article']);
+        $data = $request->validated(); // ✅ Get validated request data
 
-        $this->syncTags($article);
+        $article = auth()->user()->articles()->create($data['article']);
+
+        $this->syncTags($article, $data['article']['tagList'] ?? []); // ✅ Pass tags explicitly
 
         return $this->articleResponse($article);
     }
 
     public function update(Article $article, UpdateRequest $request): ArticleResource
     {
-        $article->update($request->validated()['article']);
+        $data = $request->validated(); // ✅ Get validated request data
 
-        $this->syncTags($article);
+        $article->update($data['article']);
+
+        $this->syncTags($article, $data['article']['tagList'] ?? []); // ✅ Pass tags explicitly
 
         return $this->articleResponse($article);
     }
@@ -78,11 +82,17 @@ class ArticleController extends Controller
         return $this->articleResponse($article);
     }
 
-    protected function syncTags(Article $article): void
+    /**
+     * Sync tags with the article.
+     */
+    protected function syncTags(Article $article, array $tags = []): void
     {
-        $this->articleService->syncTags($article, $this->request->validated()['article']['tagList'] ?? []);
+        $this->articleService->syncTags($article, $tags);
     }
 
+    /**
+     * Return formatted article response.
+     */
     protected function articleResponse(Article $article): ArticleResource
     {
         return new ArticleResource($article->load('user', 'users', 'tags', 'user.followers'));

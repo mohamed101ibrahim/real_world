@@ -21,4 +21,5 @@ class UpdateRequest extends FormRequest
             'article.tagList.*' => 'sometimes|string|max:255'
         ];
     }
+    
 }
