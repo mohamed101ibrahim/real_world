@@ -44,9 +44,9 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::prefix('article')->group(function () {
-        Route::get('{article}/revisions', [ArticleRevisionController::class, 'index']);
-        Route::get('{article}/revisions/{revision}', [ArticleRevisionController::class, 'show']);
-        Route::post('{article}/revisions/{revision}/revert', [ArticleRevisionController::class, 'update']);
+        Route::get('{article}/revisions', [ArticleRevisionController::class, 'index'])->name('revisions.index');
+        Route::get('{article}/revisions/{revision}', [ArticleRevisionController::class, 'show'])->name('revisions.show');
+        Route::post('{article}/revisions/{revision}/revert', [ArticleRevisionController::class, 'revert'])->name('revisions.revert');
     });
 
     Route::prefix('articles')->group(function () {

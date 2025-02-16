@@ -11,17 +11,21 @@ class ArticleRevisionController extends Controller
 {
     public function index(Article $article)
     {
-        return response()->json($article->revisions, Response::HTTP_OK);
+        $revisions = $article->revisions;
+        return view('articles.revisions', compact('article', 'revisions'));
+
     }
 
     public function show(Article $article, ArticleRevision $revision)
     {
-        return response()->json($revision, Response::HTTP_OK);
+        return view('articles.revision_detail', compact('article', 'revision'));
     }
 
-    public function update(UpdateRevisionRequest $request,Article $article, ArticleRevision $revision)
+    public function update(UpdateRevisionRequest $request, Article $article, ArticleRevision $revision)
     {
-        $updatedRevision = $request->updateRevision($revision);
-        return response()->json($updatedRevision, Response::HTTP_OK);
+        $request->updateRevision($revision);
+        return redirect()->route('revisions.index', $article->id)->with('success', 'Article reverted successfully!');
     }
+
+
 }
