@@ -64,3 +64,35 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+
+
+************************************************************************************************
+## revision feature
+-How It Works - Step by Step
+1️- When an Article is Updated
+Before an article is updated, an observer captures the current state and stores it in the article_revisions table.
+This ensures that every edit creates a backup, preserving the article's history.
+2️- Listing Revisions
+Users can retrieve a list of all previous versions of an article.
+This helps track changes over time.
+3️- Viewing a Specific Revision
+A user can view the details of any previous revision.
+This allows comparison between versions.
+4️- Reverting to an Older Revision
+If needed, users can restore an article to a previous version.
+This replaces the current article content with the content from the selected revision.
+
+-Assumptions & Design Decisions
+* Only the author or an admin can revert articles
+* Each update triggers automatic revision creation
+* Revisions are read-only and cannot be modified
+* Old revisions are not deleted unless the article is deleted
+
+-Testing the Endpoints
+List Revisions:
+GET /api/article/{article_id}/revisions
+Get Specific Revision:
+GET /api/article/{article_id}/revisions/{revision_id}
+Revert to a Revision:
+POST /api/article/{article_id}/revisions/{revision_id}/revert
